@@ -245,7 +245,7 @@ p{margin:0 0 12px}
   <div id="page-result" class="hidden"></div>
 
   <div class="foot">
-    <div>动漫人格研究所 · 仅供娱乐与自我探索参考</div>
+    <div><span id="shopName">动漫人格研究所</span> · 仅供娱乐与自我探索参考</div>
     <div style="margin-top:4px">本测试结果不作为心理诊断依据</div>
   </div>
 </div>
@@ -435,27 +435,29 @@ const TYPES = {
 /* =========================================================
    ③ 解锁码：改成你自己的密钥（改了之后旧码全部失效）
    ========================================================= */
-const SALT = 'anime2026';      // ← 必改
+const SALT = 'xy_anime_5rcjpvrq';      // ← 已帮你换成随机密钥，别告诉任何人
 
 /* =========================================================
    ④ 卖货配置：想怎么卖，只改这一个地方
    -----------------------------------------------------------
-   mode 三种写法：
+   mode 四种写法：
+     'xhs'     → 小红书专用：不放外链，只提示去订单里找解锁码
      'xianyu'  → 跳闲鱼/店铺下单（按钮 + 链接）
      'wechat'  → 放收款二维码 + 微信号，你手动发码
-     'link'    → 跳任意购买链接（小红书店铺、面包多等）
-   注意：微信/QQ 里打开网页时，外链按钮可能被拦截，
-        那种场景建议用 'wechat' 模式（让用户复制微信号加你）
+     'link'    → 跳任意购买链接（面包多、爱发电等）
+   注意：微信/QQ/小红书里打开网页时，外链按钮会被拦截，
+        小红书场景请用 'xhs' 模式
    ========================================================= */
 const SELL = {
-  mode: 'xianyu',                       // ← 'xianyu' | 'wechat' | 'link'
+  mode: 'xhs',                          // ← 'xhs' | 'xianyu' | 'wechat' | 'link'
   price: '¥2.9',
   originPrice: '¥19.9',
-  buyUrl: 'https://www.goofish.com/',   // ← 换成你的闲鱼商品 / 店铺链接
+  buyUrl: 'https://www.goofish.com/',   // ← xianyu / link 模式才用
   buyBtnText: '去闲鱼下单 ¥2.9',
-  contact: '微信号：your_wechat',        // ← wechat 模式必填
-  qrImage: '',                          // ← 收款二维码图片地址（可选，填了会显示）
-  tip: '下单后会自动收到 8 位解锁码，回到本页输入即可解锁。'
+  contact: '小红书私信：@这里改成你的账号名',   // ← xhs / wechat 模式必填
+  qrImage: '',                          // ← wechat 模式可选，填了会显示收款码
+  shopName: '动漫人格研究所',             // ← 页脚显示的店名，改成你自己的
+  tip: '下单后会自动收到测试链接和 8 位解锁码\n链接请复制到浏览器打开，不要直接点'
 };
 
 /* =========================================================
@@ -716,11 +718,24 @@ function copyContact(){
   }
 }
 function initSell(){
+  if(SELL.shopName&&$('shopName'))$('shopName').textContent=SELL.shopName;
   $('priceBox').innerHTML=`${SELL.price}<small> 一次性</small><del>${SELL.originPrice}</del>`;
   $('sellTip').innerHTML=(SELL.tip||'').replace(/\n/g,'<br>');
   const b=$('buyBox');
   const head=`<div style="font-size:14px;font-weight:700;margin-bottom:12px">还没有解锁码？</div>`;
-  if(SELL.mode==='xianyu'||SELL.mode==='link'){
+  if(SELL.mode==='xhs'){
+    b.innerHTML=head+
+      `<div style="background:#fff;border-radius:14px;padding:18px;text-align:center;line-height:1.9">
+        <div style="font-size:38px">📩</div>
+        <div style="font-size:14px;color:#413c55;margin-top:6px">
+          在我的小店下单后，会话里会收到<br>
+          <b>一个测试链接 + 一个 8 位解锁码</b><br>
+          把解锁码填进上面的框里即可
+        </div>
+        <div style="font-size:14px;font-weight:800;margin-top:14px;color:var(--brand)">${SELL.contact}</div>
+      </div>
+      <button class="btn ghost sm" style="margin-top:12px" onclick="copyContact()">复制联系方式</button>`;
+  }else if(SELL.mode==='xianyu'||SELL.mode==='link'){
     b.innerHTML=head+
       `<a class="btn pink" href="${SELL.buyUrl}" target="_blank" rel="noopener"
           style="text-decoration:none;display:block;text-align:center">${SELL.buyBtnText}</a>
@@ -746,7 +761,7 @@ function initAdmin(){
   const p=new URLSearchParams(location.search).get('admin');
   if(!p)return;
   const want=String(hashInt(SALT)%100000).padStart(5,'0');
-  if(p!==want && p!=='opensesame')return;
+  if(p!==want)return;
   const box=$('adminbox');
   box.classList.remove('hidden');
   box.innerHTML=`<div class="genbox">
