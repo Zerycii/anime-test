@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>测一测｜你是哪个动漫角色？40题深度人格匹配</title>
+<meta name="description" content="40道题，测出你的隐藏人格，并匹配与你灵魂最像的那个动漫角色。">
+<meta property="og:title" content="测一测｜你是哪个动漫角色？">
+<meta property="og:description" content="40道题精准匹配，看看你灵魂里住着谁。">
+<style>
+:root{
+  --bg:#f6f3ff; --card:#ffffff; --ink:#1e1b2e; --sub:#6b6580;
+  --brand:#7c5cff; --brand2:#ff6ba8; --brand3:#4dd4c1;
+  --line:#ece7f8; --shadow:0 10px 40px rgba(124,92,255,.14);
+  --radius:20px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.7;
+  background-image:radial-gradient(900px 400px at 100% -10%,#ffe3f0 0%,transparent 60%),
+                   radial-gradient(800px 400px at -10% 10%,#e3e6ff 0%,transparent 55%);
+  background-attachment:fixed;
+  min-height:100vh;
+}
+.wrap{max-width:520px;margin:0 auto;padding:0 18px 60px}
+.hidden{display:none!important}
+
+/* ---------- 顶部 ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 0 6px;font-size:13px;color:var(--sub)}
+.topbar b{color:var(--brand);font-weight:700}
+
+/* ---------- 通用卡片 ---------- */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px 22px;margin-top:14px}
+h1{font-size:26px;line-height:1.4;margin:0 0 10px;letter-spacing:.5px}
+h2{font-size:20px;margin:0 0 8px}
+p{margin:0 0 12px}
+.sub{color:var(--sub);font-size:14px}
+.center{text-align:center}
+
+/* ---------- 按钮 ---------- */
+.btn{
+  display:block;width:100%;border:none;border-radius:14px;padding:16px 18px;font-size:16px;font-weight:700;
+  color:#fff;background:linear-gradient(135deg,var(--brand),#a78bfa);cursor:pointer;
+  box-shadow:0 8px 22px rgba(124,92,255,.32);transition:transform .12s ease;
+  font-family:inherit;
+}
+.btn:active{transform:scale(.97)}
+.btn.pink{background:linear-gradient(135deg,var(--brand2),#ff9a76);box-shadow:0 8px 22px rgba(255,107,168,.32)}
+.btn.ghost{background:#fff;color:var(--brand);border:2px solid #e6dffb;box-shadow:none}
+.btn.sm{padding:12px 14px;font-size:14px}
+
+/* ---------- 首页 ---------- */
+.hero{padding:34px 22px 26px;text-align:center;position:relative;overflow:hidden}
+.hero .emoji{font-size:44px;margin-bottom:6px}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.badge{font-size:12px;color:var(--brand);background:#f2edff;border-radius:999px;padding:5px 12px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}
+.chip{font-size:12px;color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+.howto{font-size:14px;color:var(--sub)}
+.howto li{margin-bottom:6px}
+
+/* ---------- 进度 ---------- */
+.progwrap{position:sticky;top:0;z-index:20;background:var(--bg);padding:10px 0 8px}
+.progline{height:8px;background:#ece7f8;border-radius:99px;overflow:hidden}
+.progfill{height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:99px;transition:width .35s cubic-bezier(.4,1.3,.5,1)}
+.progtxt{display:flex;justify-content:space-between;font-size:12px;color:var(--sub);margin-bottom:6px;font-weight:600}
+
+/* ---------- 题目 ---------- */
+.qnum{font-size:12px;color:var(--brand);font-weight:800;letter-spacing:2px;margin-bottom:8px}
+.qtext{font-size:19px;font-weight:700;line-height:1.6;margin-bottom:22px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{
+  display:flex;align-items:center;gap:12px;background:#faf8ff;border:2px solid transparent;
+  border-radius:14px;padding:14px 16px;font-size:15px;cursor:pointer;transition:.15s;font-weight:500;
+}
+.opt:active{transform:scale(.98)}
+.opt .dot{width:22px;height:22px;border-radius:50%;border:2px solid #d9d0f5;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff}
+.opt.on{background:#f3efff;border-color:var(--brand)}
+.opt.on .dot{background:var(--brand);border-color:var(--brand)}
+.opt.on .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+.navrow{display:flex;gap:10px;margin-top:20px}
+.navrow .btn{flex:1}
+
+/* ---------- 结果 ---------- */
+.rcard{
+  background:linear-gradient(150deg,#7c5cff,#ff6ba8);color:#fff;border-radius:24px;padding:28px 22px;
+  box-shadow:0 14px 40px rgba(124,92,255,.35);text-align:center;margin-top:14px;position:relative;overflow:hidden
+}
+.rcard::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.13);right:-70px;top:-90px}
+.rcard .lab{font-size:13px;opacity:.85;letter-spacing:3px}
+.rcard .type{font-size:46px;font-weight:900;letter-spacing:4px;margin:4px 0 2px;text-shadow:0 4px 18px rgba(0,0,0,.18)}
+.rcard .tname{font-size:17px;font-weight:700;opacity:.95}
+.rcard .anime{margin-top:18px;background:rgba(255,255,255,.16);border-radius:16px;padding:16px}
+.rcard .anime .n{font-size:24px;font-weight:800}
+.rcard .anime .w{font-size:12px;opacity:.85;margin-top:2px}
+.match{margin-top:14px;font-size:13px;opacity:.95}
+.matchbar{height:8px;background:rgba(255,255,255,.28);border-radius:99px;margin-top:8px;overflow:hidden}
+.matchfill{height:100%;background:#fff;border-radius:99px;width:0;transition:width 1.2s cubic-bezier(.2,.9,.3,1)}
+
+.dimrow{margin-bottom:14px}
+.dimhead{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:6px}
+.dimhead span:last-child{color:var(--sub);font-weight:600}
+.dbar{display:flex;height:10px;border-radius:99px;overflow:hidden;background:#f0edf9}
+.dbar i{display:block;height:100%;transition:width .9s cubic-bezier(.2,.9,.3,1)}
+.dbar .l{background:linear-gradient(90deg,#b8a5ff,#7c5cff)}
+.dbar .r{background:linear-gradient(90deg,#ff9bc4,#ff6ba8)}
+.dimtag{display:flex;justify-content:space-between;font-size:11px;color:var(--sub);margin-top:4px}
+
+.sec{margin-top:16px}
+.sec h3{font-size:16px;margin:0 0 10px;display:flex;align-items:center;gap:7px}
+.sec h3::before{content:"";width:4px;height:16px;border-radius:2px;background:var(--brand)}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{font-size:13px;background:#f5f1ff;color:#5b46b5;border-radius:8px;padding:6px 11px;font-weight:600}
+.list{margin:0;padding-left:18px;font-size:14px;color:#413c55}
+.list li{margin-bottom:7px}
+
+.lockbox{text-align:center;padding:26px 20px}
+.lockbox .ic{font-size:40px}
+.blur{filter:blur(7px);user-select:none;pointer-events:none;opacity:.75}
+
+.paycard{background:linear-gradient(160deg,#fff6fa,#f4f0ff);border:2px dashed #e3d8ff}
+.price{font-size:34px;font-weight:900;color:var(--brand2);margin:8px 0}
+.price small{font-size:14px;font-weight:600;color:var(--sub)}
+.price del{font-size:15px;color:#b3adc4;font-weight:600;margin-left:6px}
+.codeinp{width:100%;border:2px solid #e6dffb;border-radius:14px;padding:14px;font-size:17px;text-align:center;
+  letter-spacing:3px;font-family:inherit;font-weight:700;margin:14px 0 10px;outline:none;background:#fff}
+.codeinp:focus{border-color:var(--brand)}
+.tip{font-size:12px;color:var(--sub);line-height:1.7}
+.ok{color:#12a87c;font-weight:700;font-size:14px}
+.err{color:#e5484d;font-weight:700;font-size:14px}
+
+.shareprev{width:100%;border-radius:14px;margin-top:14px;display:block;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.foot{text-align:center;font-size:12px;color:var(--sub);margin-top:26px;line-height:1.8}
+.foot a{color:var(--brand);text-decoration:none}
+
+/* ---------- 生成器 ---------- */
+.genbox{background:#fff8e6;border:2px solid #ffe1a8;border-radius:16px;padding:16px;margin-top:14px;font-size:13px}
+.genbox input{width:100%;padding:11px;border:2px solid #ffe1a8;border-radius:10px;font-size:15px;margin:8px 0;outline:none;font-family:inherit}
+.codelist{max-height:150px;overflow:auto;background:#fff;border-radius:10px;padding:10px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;letter-spacing:1px;line-height:1.9}
+
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.card,.rcard{animation:pop .45s cubic-bezier(.2,.9,.3,1) both}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ 首页 ============ -->
+  <div id="page-intro">
+    <div class="topbar"><span>动漫人格研究所</span><span><b id="counter">已有 38,412 人测试</b></span></div>
+
+    <div class="card hero">
+      <div class="emoji">🌙</div>
+      <h1>你的灵魂里<br>住着哪个动漫角色？</h1>
+      <p class="sub">40 道题 · 5 分钟 · 精准匹配<br>测出你的人格类型，并找到与你最像的那个人</p>
+      <div class="badges">
+        <span class="badge">✦ 专业 4 维模型</span>
+        <span class="badge">✦ 16 种人格</span>
+        <span class="badge">✦ 16 位经典角色</span>
+      </div>
+      <div class="chips">
+        <span class="chip">火影忍者</span><span class="chip">进击的巨人</span><span class="chip">名侦探柯南</span>
+        <span class="chip">海贼王</span><span class="chip">BLEACH</span><span class="chip">钢之炼金术师</span>
+        <span class="chip">咒术回战</span><span class="chip">你的名字。</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>怎么玩？</h2>
+      <ul class="howto">
+        <li>1️⃣ 认真读完 40 道题，凭第一直觉选择</li>
+        <li>2️⃣ 提交后得到你的 4 字人格类型 + 四维画像</li>
+        <li>3️⃣ 解锁后查看你的<strong>专属动漫角色</strong>、匹配度、性格深度解析</li>
+      </ul>
+    </div>
+
+    <div style="margin-top:18px">
+      <button class="btn" onclick="startQuiz()">开始测试 →</button>
+      <p class="tip center" style="margin-top:12px">🔒 测试过程完全匿名，数据只存在你的手机里</p>
+    </div>
+
+    <div id="adminbox" class="hidden"></div>
+  </div>
+
+  <!-- ============ 答题页 ============ -->
+  <div id="page-quiz" class="hidden">
+    <div class="progwrap">
+      <div class="progtxt"><span id="qidx">第 1 / 40 题</span><span id="qpct">0%</span></div>
+      <div class="progline"><div class="progfill" id="qfill"></div></div>
+    </div>
+    <div class="card">
+      <div class="qnum" id="qdim">维度 · 精力来源</div>
+      <div class="qtext" id="qtext"></div>
+      <div class="opts" id="opts"></div>
+      <div class="navrow">
+        <button class="btn ghost sm" onclick="prevQ()">← 上一题</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 付费墙 ============ -->
+  <div id="page-pay" class="hidden">
+    <div class="card" style="text-align:center;padding:32px 22px">
+      <div style="font-size:46px">🎉</div>
+      <h1 style="font-size:22px;margin:10px 0 6px">测试完成！</h1>
+      <p class="sub">你的四维人格画像已生成，但你的<strong>专属动漫角色</strong>还被锁着</p>
+
+      <div id="preview-type" style="margin-top:18px"></div>
+
+      <div class="blur" style="margin-top:18px;padding:14px;background:#faf8ff;border-radius:14px">
+        <div style="font-size:22px;font-weight:800">？？？</div>
+        <div style="font-size:13px;color:var(--sub)">《？？？》· 匹配度 ??%</div>
+      </div>
+    </div>
+
+    <div class="card paycard">
+      <div class="center">
+        <div style="font-size:13px;color:var(--sub)">🔓 解锁完整角色报告</div>
+        <div class="price" id="priceBox"></div>
+      </div>
+      <ul class="list" style="padding-left:20px">
+        <li>你的专属动漫角色 + 出处</li>
+        <li>与角色的 <strong>匹配度百分比</strong> 和共鸣点</li>
+        <li>四维人格深度解析（优势 / 盲点 / 成长建议）</li>
+        <li>与你最合拍 / 最容易冲突的角色</li>
+        <li>可保存的高颜值结果卡片，一键分享</li>
+      </ul>
+
+      <div style="margin-top:18px">
+        <input class="codeinp" id="codeInput" placeholder="输入 8 位解锁码" maxlength="8" inputmode="numeric">
+        <button class="btn pink" onclick="redeem()">立即解锁</button>
+        <div id="codemsg" style="min-height:22px;margin-top:10px"></div>
+      </div>
+
+      <div style="margin-top:20px;border-top:1px dashed #e6dffb;padding-top:16px">
+        <div id="buyBox"></div>
+        <p class="tip" id="sellTip" style="margin-top:12px"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 结果页 ============ -->
+  <div id="page-result" class="hidden"></div>
+
+  <div class="foot">
+    <div>动漫人格研究所 · 仅供娱乐与自我探索参考</div>
+    <div style="margin-top:4px">本测试结果不作为心理诊断依据</div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   ① 题目区：想改题就改这里
+   d = 维度（EI / SN / TF / JP）
+   dir = 1 表示"越同意越倾向前一个字母(E/S/T/J)"
+       = -1 表示"越同意越倾向后一个字母(I/N/F/P)"
+   ========================================================= */
+const QUESTIONS = [
+  // ---- E / I 精力来源 ----
+  {d:'EI',dir:1, t:'参加完一场聚会，我通常是精神焕发而不是精疲力尽。'},
+  {d:'EI',dir:1, t:'在一群人里，我很容易成为话题的发起人。'},
+  {d:'EI',dir:1, t:'遇到烦心事，我的第一反应是找个人说出来。'},
+  {d:'EI',dir:-1,t:'独自待上一整天，对我来说是享受而不是煎熬。'},
+  {d:'EI',dir:1, t:'我的通讯录里躺着很多"随时能约"的人。'},
+  {d:'EI',dir:1, t:'到了陌生环境，我能很快跟别人混熟。'},
+  {d:'EI',dir:1, t:'我常常是说着说着，才真正想清楚自己在想什么。'},
+  {d:'EI',dir:1, t:'周末我更想约朋友出门，而不是一个人待着。'},
+  {d:'EI',dir:-1,t:'长时间社交后我需要独处"回血"，否则会很烦躁。'},
+  {d:'EI',dir:-1,t:'别人常说我看起来安静、神秘、有点难接近。'},
+
+  // ---- S / N 信息获取 ----
+  {d:'SN',dir:1, t:'我只相信亲眼看到、亲手验证过的东西。'},
+  {d:'SN',dir:-1,t:'别人讲一件事时，我脑子里会立刻冒出画面和后续走向。'},
+  {d:'SN',dir:1, t:'做事我更愿意沿用已经验证过的老办法。'},
+  {d:'SN',dir:-1,t:'我经常被"如果……会怎么样"这类念头勾走注意力。'},
+  {d:'SN',dir:1, t:'我记性不错，尤其记得细节、日期和当时的场景。'},
+  {d:'SN',dir:1, t:'听人讲大道理时，我只想听具体怎么做、举个例子。'},
+  {d:'SN',dir:-1,t:'我的想法经常从一个话题跳到另一个看起来毫不相干的话题。'},
+  {d:'SN',dir:-1,t:'比起眼前的事，我更常琢磨几年以后的自己。'},
+  {d:'SN',dir:-1,t:'我擅长察觉规律、暗示和别人没说出口的意思。'},
+  {d:'SN',dir:1, t:'我觉得"脚踏实地"比"仰望星空"重要得多。'},
+
+  // ---- T / F 决策方式 ----
+  {d:'TF',dir:1, t:'做决定时，我把逻辑和事实放在别人的感受前面。'},
+  {d:'TF',dir:1, t:'朋友哭着找我倾诉时，我脑子先转的是"这事怎么解决"。'},
+  {d:'TF',dir:1, t:'看到不公平的事，即使会伤和气我也要说出来。'},
+  {d:'TF',dir:-1,t:'我很容易被别人的情绪带着走，跟着难过或开心。'},
+  {d:'TF',dir:1, t:'评价一件事，我更在意的是"这样做对不对"。'},
+  {d:'TF',dir:1, t:'我宁可让人失望，也不愿意说违心的话。'},
+  {d:'TF',dir:-1,t:'我很在意整个团队的气氛是不是和睦。'},
+  {d:'TF',dir:1, t:'有人说过我"太理性了，一点都不温柔"。'},
+  {d:'TF',dir:-1,t:'做选择时我会先问自己：这样会不会伤到谁？'},
+  {d:'TF',dir:-1,t:'跟人沟通时，我习惯先共情，再讲道理。'},
+
+  // ---- J / P 生活方式 ----
+  {d:'JP',dir:1, t:'出门旅行前，我会把行程表排得明明白白。'},
+  {d:'JP',dir:1, t:'计划突然被打乱时，我会明显烦躁。'},
+  {d:'JP',dir:1, t:'把待办清单一条条划掉，对我来说非常爽。'},
+  {d:'JP',dir:-1,t:'我更享受"说走就走"的随机感和意外惊喜。'},
+  {d:'JP',dir:-1,t:'我习惯把事情拖到最后一刻，然后爆发式完成。'},
+  {d:'JP',dir:1, t:'我的桌面和房间基本保持整洁有序。'},
+  {d:'JP',dir:1, t:'一旦做了决定，我很少反悔。'},
+  {d:'JP',dir:-1,t:'我总觉得还有选项没看完，所以迟迟下不了决心。'},
+  {d:'JP',dir:1, t:'我讨厌悬而未决的状态，事情定下来才安心。'},
+  {d:'JP',dir:-1,t:'我随时愿意为了更好的可能性推翻原计划。'}
+];
+
+const DIM_META = {
+  EI:{name:'精力来源', a:'E 外向', b:'I 内向'},
+  SN:{name:'信息获取', a:'S 实感', b:'N 直觉'},
+  TF:{name:'决策方式', a:'T 思考', b:'F 情感'},
+  JP:{name:'生活态度', a:'J 计划', b:'P 随性'}
+};
+
+/* =========================================================
+   ② 角色区：16 型对应 16 位角色，想换就改这里
+   ========================================================= */
+const TYPES = {
+  INTJ:{name:'建筑师', group:'分析家', anime:'鲁路修·兰佩路基', work:'《叛逆的鲁路修》',
+    tags:['谋略家','孤高','长远布局','不擅表达'],
+    match:'你和他一样，习惯在别人还没反应过来时就已布好整盘棋。你不爱解释，也不指望被理解，只在意结果是不是按你想要的方向走。',
+    strong:['能在混乱中迅速看清结构与因果','目标感极强，愿意为长期目标忍受孤独','执行力来自内在标准，不依赖外界夸奖'],
+    weak:['容易把"效率"看得比"关系"重，伤人而不自知','习惯性隐藏真实情绪，导致身边人读不懂你','一旦判断失误，很难开口求助'],
+    grow:['试着把你的计划解释给重要的人听 —— 被理解不会削弱你的掌控力','允许自己在无关紧要的小事上"随便吧"','定期找一个能跟你平等辩论的人，避免思维内循环'],
+    best:'ENFP', clash:'ESFP'},
+  INTP:{name:'逻辑学家', group:'分析家', anime:'江户川柯南', work:'《名侦探柯南》',
+    tags:['解谜狂','理性至上','好奇心','社交节能'],
+    match:'你和他一样，看到不合理的地方就浑身难受，非要把真相挖出来才罢休。比起热闹的场合，你更享受一个人把问题想透的快感。',
+    strong:['拆解复杂问题的能力极强','不受权威和情绪裹挟，只看证据','对感兴趣的领域能持续深挖'],
+    weak:['想得多做得少，容易停在"分析瘫痪"','对人情世故反应迟钝，常被误会为冷漠','不擅长处理没有标准答案的模糊局面'],
+    grow:['给自己设一个"想到 80% 就动手"的截止线','把想法说给别人听，用外部反馈打破闭环','每周留一点时间运动或动手做点东西，别只在脑子里活着'],
+    best:'ENTJ', clash:'ESFJ'},
+  ENTJ:{name:'指挥官', group:'分析家', anime:'蓝染惣右介', work:'《BLEACH 死神》',
+    tags:['天生领袖','气场强','掌控欲','目标驱动'],
+    match:'你和他一样，从骨子里不接受"只能被动接受安排"。你习惯站在更高的位置看全局，并且相信自己有能力把局面推向想要的方向。',
+    strong:['天然的组织与推动能力','高压下反而更清醒高效','敢于做别人不敢做的艰难决定'],
+    weak:['容易忽视他人的情绪成本','耐心不足，对节奏慢的人缺乏包容','把"赢"看得太重，容易透支自己'],
+    grow:['在做决定前，多问一句"这对他们意味着什么"','刻意练习倾听，不急着给方案','给"无产出的休息"留出正当位置'],
+    best:'INFP', clash:'ISFP'},
+  ENTP:{name:'辩论家', group:'分析家', anime:'怪盗基德（黑羽快斗）', work:'《名侦探柯南》',
+    tags:['鬼点子多','爱挑衅规则','临场反应快','三分钟热度'],
+    match:'你和他一样，最受不了的不是失败，而是"无聊"。规则对你来说更像是可选的参考意见，你享受在所有人以为尘埃落定时翻盘的那一刻。',
+    strong:['点子产出速度惊人，擅长破局','临场应变和口才一流','对新鲜事物吸收极快'],
+    weak:['起手太多，收尾太少','享受辩论本身，容易误伤关系','长期重复性工作会让你迅速枯竭'],
+    grow:['每季度只挑 1 件事，逼自己做到收尾','分清"赢了对错"和"赢了对人"的区别','给重要的事找一个 J 型的搭档来兜底'],
+    best:'INFJ', clash:'ISTJ'},
+  INFJ:{name:'提倡者', group:'外交家', anime:'宇智波鼬', work:'《火影忍者》',
+    tags:['洞察人心','使命感','自我牺牲','外冷内热'],
+    match:'你和他一样，看得比谁都清楚，却选择一个人扛下所有。你不轻易让人靠近，但一旦认定，就会把对方放在比自己更重要的位置。',
+    strong:['对人的动机和情绪极度敏锐','有清晰的价值观和长期信念','在危机中异常沉稳可靠'],
+    weak:['过度自我牺牲，习惯性压抑需求','因为看得太透而难以亲近他人','一旦信念崩塌，恢复期很长'],
+    grow:['练习直接说出"我需要什么"，而不是等别人猜','把"照顾好自己"当成一项任务来完成','允许别人为你做点什么，这不代表亏欠'],
+    best:'ENFP', clash:'ESTP'},
+  INFP:{name:'调停者', group:'外交家', anime:'宫水三叶', work:'《你的名字。》',
+    tags:['理想主义','共情力强','内心戏足','温柔坚定'],
+    match:'你和他一样，心里住着一个比现实更柔软的世界。你可能不擅长大声表达，但你认定的事，会安静地坚持到底。',
+    strong:['极强的共情与治愈能力','忠于内心价值，不轻易被现实同化','创造力往往藏在细腻的感受里'],
+    weak:['容易内耗，把批评当成对人格的否定','回避冲突，导致问题越积越多','现实执行力常跟不上内心热情'],
+    grow:['把"感受"写成具体的待办，能解决一半的内耗','练习在小事上说不，冲突没那么可怕','找一个能把你的作品推向世界的搭档'],
+    best:'ENTJ', clash:'ESTJ'},
+  ENFJ:{name:'主人公', group:'外交家', anime:'爱德华·艾尔利克', work:'《钢之炼金术师》',
+    tags:['热血担当','感染力','护短','责任感爆棚'],
+    match:'你和他一样，嘴上说"没什么大不了"，身体却总是第一个冲上去。你在意的人，你护起来是不讲道理的。',
+    strong:['天然能凝聚人心、带动气氛','责任感极强，说到就一定做到','善于发现别人的优点并真心夸奖'],
+    weak:['容易为别人的期待而活，忽略自己','控制欲藏在"我是为你好"里','过度付出后容易突然抽离'],
+    grow:['每周留一段"谁都不帮"的时间','区分"支持"和"接管"，让别人自己走','允许自己在不完美的情况下休息'],
+    best:'INFP', clash:'ISTP'},
+  ENFP:{name:'竞选者', group:'外交家', anime:'漩涡鸣人', work:'《火影忍者》',
+    tags:['热情四射','共情力强','不死心','注意力跳跃'],
+    match:'你和他一样，被否定一百次也还能站起来说"我一定会做到"。你身上有种不讲道理的生命力，能把身边的人一起点亮。',
+    strong:['极强的感染力与破冰能力','对新可能性的嗅觉灵敏','逆境恢复力惊人'],
+    weak:['注意力分散，容易半途而废','讨厌例行公事，细节容易翻车','情绪起伏大，容易冲动承诺'],
+    grow:['把大目标拆成 2 周可见的小反馈','给日常琐事配一个清单或搭档','情绪上头时，先睡一觉再回复'],
+    best:'INTJ', clash:'ISTJ'},
+  ISTJ:{name:'物流师', group:'守护者', anime:'利威尔·阿克曼', work:'《进击的巨人》',
+    tags:['可靠','纪律严明','务实','外冷内热'],
+    match:'你和他一样，话不多但每件事都做到位。你相信的不是豪言壮语，而是"该做的事，做完它"。',
+    strong:['极强的责任感与执行力','细节把控一流，几乎不犯错','压力下稳定得可怕'],
+    weak:['对不按规矩办事的人容忍度低','不擅长表达情感，容易显得疏离','习惯抗拒变化，容易错过机会'],
+    grow:['试着解释你"为什么这么做"，而不只是要求别人照做','允许 20% 的计划和最初不同','主动说一句肯定，比你以为的更有分量'],
+    best:'ESFP', clash:'ENTP'},
+  ISFJ:{name:'守卫者', group:'守护者', anime:'日向雏田', work:'《火影忍者》',
+    tags:['温柔守护','默默付出','记性好','不善拒绝'],
+    match:'你和他一样，不习惯站在聚光灯下，却总在关键的时候默默站在该站的位置上。你的温柔不是软弱，是一种很坚定的选择。',
+    strong:['惊人的细致与体贴','答应的事一定做到','对重要的人有长期而稳定的守护力'],
+    weak:['太怕给别人添麻烦，习惯性委屈自己','不擅长拒绝，容易被人消耗','习惯忍耐，情绪积累到极限才爆发'],
+    grow:['把"我不方便"练成一句能说出口的话','你的需求同样重要，不需要用付出来换','不舒服时尽早说出来，别等到忍无可忍'],
+    best:'ESTP', clash:'ENTP'},
+  ESTJ:{name:'总经理', group:'守护者', anime:'赤木刚宪', work:'《灌篮高手》',
+    tags:['天生队长','讲原则','组织力强','严厉'],
+    match:'你和他一样，只要站上场，就把"赢"当成对所有人负责的方式。你对自己狠，对团队要求高，但没有人能否认你的可靠。',
+    strong:['组织与动员能力出众','目标清晰，推动力强','在混乱中能迅速建立秩序'],
+    weak:['容易显得强硬、不近人情','对"不合标准"的人和事缺乏耐心','把效率和结果当成唯一标准'],
+    grow:['先肯定再纠正，效率反而更高','允许别人用不同的方式达到同样的结果','关心不只体现在"帮你变强"，也可以是一句闲聊'],
+    best:'ISFP', clash:'INFP'},
+  ESFJ:{name:'执政官', group:'守护者', anime:'春野樱', work:'《火影忍者》',
+    tags:['热心肠','重视关系','责任心','在意评价'],
+    match:'你和他一样，看起来爱操心、爱管事，其实只是太在乎身边的人。你会为了维护一段关系，做很多别人看不到的努力。',
+    strong:['天生能照顾到每个人的感受','责任感强，团队里的粘合剂','行动力强，想到就去做'],
+    weak:['过度在意他人评价，容易被情绪绑架','付出之后会期待回报，落空就委屈','不喜欢冲突，却常常用唠叨制造冲突'],
+    grow:['把"为你好"换成"你怎么想"','允许别人用你不认同的方式生活','每周给自己安排一件纯为自己做的事'],
+    best:'ISFP', clash:'INTP'},
+  ISTP:{name:'鉴赏家', group:'探险家', anime:'三笠·阿克曼', work:'《进击的巨人》',
+    tags:['冷静果断','动手能力强','少说多做','情绪克制'],
+    match:'你和他一样，别人还在慌乱的时候，你的手已经动了。你不爱解释，行动本身就是你的表达方式。',
+    strong:['危机中判断极准，反应极快','动手能力一流，喜欢研究机制','情绪稳定，不容易被带节奏'],
+    weak:['情感表达过于克制，让人读不懂','对长期承诺兴趣缺缺','容易在稳定期感到无聊而自毁'],
+    grow:['试着用语言说出你在乎什么，哪怕笨拙','给生活保留一点有挑战的新东西','重要的人需要听到确认，不只是看到行动'],
+    best:'ESFJ', clash:'ENFJ'},
+  ISFP:{name:'探险家', group:'探险家', anime:'黑崎一护', work:'《BLEACH 死神》',
+    tags:['行动派','重情义','低调','凭直觉'],
+    match:'你和他一样，嘴上说着"不关我的事"，身体却已经冲在最前面。你不喜欢被规则和头衔束缚，只在乎该保护的人有没有事。',
+    strong:['危机时刻爆发力惊人','真诚不做作，让人愿意信赖','审美与感受力细腻'],
+    weak:['不喜欢被规划，长期目标模糊','回避口头冲突，容易积压情绪','被要求"说明理由"时会很烦躁'],
+    grow:['给自己的冲动装一个 24 小时的缓冲期','把"我在乎"说出来，别只靠行动让人猜','小事上做点计划，能省下你很多麻烦'],
+    best:'ESFJ', clash:'ESTJ'},
+  ESTP:{name:'企业家', group:'探险家', anime:'更木剑八', work:'《BLEACH 死神》',
+    tags:['实战派','追求刺激','直来直去','活在当下'],
+    match:'你和他一样，最怕的不是输，而是没得打。你学东西靠上手、判断靠直觉，对"纸上谈兵"毫无兴趣。',
+    strong:['临场反应和魄力极强','抗压能力惊人，越刺激越清醒','务实，从不纠结无用的假设'],
+    weak:['长期规划能力弱，容易忽略后果','说话太直，无意中伤人','容易厌倦，缺少耐心'],
+    grow:['重要决定给自己 30 分钟冷静期','把"会有什么后果"问三遍再动手','找一个能帮你收尾的伙伴'],
+    best:'ISFJ', clash:'INFJ'},
+  ESFP:{name:'表演者', group:'探险家', anime:'蒙奇·D·路飞', work:'《海贼王》',
+    tags:['感染力','自由至上','活在当下','护短'],
+    match:'你和他一样，天生就有人群聚集效应。你不太考虑三年后的事，但你让每一个"现在"都活得很有劲。',
+    strong:['自带感染力，能迅速点燃气氛','对朋友无条件真诚','适应力强，走到哪儿都能活'],
+    weak:['讨厌规则与长期承诺','容易冲动消费和冲动决定','面对批评时防御心很强'],
+    grow:['给"未来的自己"开一个只进不出的账户','重要承诺先写下来再说出口','安静独处 20 分钟，你会发现自己也没那么怕'],
+    best:'ISTJ', clash:'INTJ'}
+};
+
+/* =========================================================
+   ③ 解锁码：改成你自己的密钥（改了之后旧码全部失效）
+   ========================================================= */
+const SALT = 'anime2026';      // ← 必改
+
+/* =========================================================
+   ④ 卖货配置：想怎么卖，只改这一个地方
+   -----------------------------------------------------------
+   mode 三种写法：
+     'xianyu'  → 跳闲鱼/店铺下单（按钮 + 链接）
+     'wechat'  → 放收款二维码 + 微信号，你手动发码
+     'link'    → 跳任意购买链接（小红书店铺、面包多等）
+   注意：微信/QQ 里打开网页时，外链按钮可能被拦截，
+        那种场景建议用 'wechat' 模式（让用户复制微信号加你）
+   ========================================================= */
+const SELL = {
+  mode: 'xianyu',                       // ← 'xianyu' | 'wechat' | 'link'
+  price: '¥2.9',
+  originPrice: '¥19.9',
+  buyUrl: 'https://www.goofish.com/',   // ← 换成你的闲鱼商品 / 店铺链接
+  buyBtnText: '去闲鱼下单 ¥2.9',
+  contact: '微信号：your_wechat',        // ← wechat 模式必填
+  qrImage: '',                          // ← 收款二维码图片地址（可选，填了会显示）
+  tip: '下单后会自动收到 8 位解锁码，回到本页输入即可解锁。'
+};
+
+/* =========================================================
+   ⑤ 以下为程序逻辑，一般不用改
+   ========================================================= */
+const CHOICES = [
+  {v:1,label:'完全不同意'},{v:2,label:'不太同意'},{v:3,label:'一般 / 中立'},
+  {v:4,label:'比较同意'},{v:5,label:'非常同意'}
+];
+const LS_ANS='mbti_anime_answers', LS_UNLOCK='mbti_anime_unlocked';
+
+let answers = new Array(QUESTIONS.length).fill(0);
+let cur = 0;
+
+function hashInt(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return Math.abs(h>>>0);}
+function makeCode(seed){const s=String(seed).padStart(4,'0');return s+String(hashInt(s+SALT)%10000).padStart(4,'0');}
+function checkCode(code){const c=(code||'').trim();if(!/^\d{8}$/.test(c))return false;return makeCode(parseInt(c.slice(0,4),10))===c;}
+
+function $(id){return document.getElementById(id)}
+function show(id){['page-intro','page-quiz','page-pay','page-result'].forEach(p=>$(p).classList.add('hidden'));$(id).classList.remove('hidden');window.scrollTo(0,0);}
+
+/* ---- 首页 ---- */
+function initCounter(){
+  const base=38412, d=new Date();
+  const n=base+Math.floor((d.getTime()/1000/3600)%900)*7;
+  $('counter').textContent='已有 '+n.toLocaleString()+' 人测试';
+}
+function startQuiz(){
+  const saved=localStorage.getItem(LS_ANS);
+  if(saved){try{const a=JSON.parse(saved);if(Array.isArray(a)&&a.length===QUESTIONS.length)answers=a;}catch(e){}}
+  cur=answers.findIndex(x=>x===0);
+  if(cur<0)cur=QUESTIONS.length-1;
+  show('page-quiz');renderQ();
+}
+
+/* ---- 答题 ---- */
+function renderQ(){
+  const q=QUESTIONS[cur];
+  $('qidx').textContent=`第 ${cur+1} / ${QUESTIONS.length} 题`;
+  const pct=Math.round((cur+1)/QUESTIONS.length*100);
+  $('qpct').textContent=pct+'%';
+  $('qfill').style.width=pct+'%';
+  $('qdim').textContent='维度 · '+DIM_META[q.d].name;
+  $('qtext').textContent=q.t;
+  const box=$('opts');box.innerHTML='';
+  CHOICES.forEach(c=>{
+    const el=document.createElement('div');
+    el.className='opt'+(answers[cur]===c.v?' on':'');
+    el.innerHTML=`<span class="dot"></span><span>${c.label}</span>`;
+    el.onclick=()=>{answers[cur]=c.v;localStorage.setItem(LS_ANS,JSON.stringify(answers));renderQ();
+      setTimeout(()=>{if(cur<QUESTIONS.length-1){cur++;renderQ();}else{finish();}},180);};
+    box.appendChild(el);
+  });
+}
+function prevQ(){if(cur>0){cur--;renderQ();}}
+
+function finish(){localStorage.setItem(LS_ANS,JSON.stringify(answers));
+  const r=calc();
+  $('preview-type').innerHTML=`<div style="font-size:38px;font-weight:900;letter-spacing:4px;color:var(--brand)">${r.type}</div>
+    <div style="font-size:15px;font-weight:700;margin-top:2px">${TYPES[r.type].name} · ${TYPES[r.type].group}</div>`;
+  const isFree=new URLSearchParams(location.search).get('free')==='1';
+  if(localStorage.getItem(LS_UNLOCK)==='1'||isFree){renderResult();}else{show('page-pay');}
+}
+
+/* ---- 计分 ---- */
+function calc(){
+  const raw={EI:0,SN:0,TF:0,JP:0}, cnt={EI:0,SN:0,TF:0,JP:0};
+  QUESTIONS.forEach((q,i)=>{
+    const v=answers[i]||3, s=(q.dir===1)?v:(6-v);
+    raw[q.d]+=s; cnt[q.d]++;
+  });
+  const pct={};
+  ['EI','SN','TF','JP'].forEach(d=>{pct[d]=Math.round((raw[d]-cnt[d])/(4*cnt[d])*100);});
+  const type=(pct.EI>=50?'E':'I')+(pct.SN>=50?'S':'N')+(pct.TF>=50?'T':'F')+(pct.JP>=50?'J':'P');
+  return {type,pct};
+}
+
+/* ---- 解锁 ---- */
+function redeem(){
+  const code=$('codeInput').value;
+  const msg=$('codemsg');
+  if(checkCode(code)){
+    localStorage.setItem(LS_UNLOCK,'1');
+    msg.innerHTML='<span class="ok">✓ 解锁成功，正在生成你的角色报告…</span>';
+    setTimeout(renderResult,600);
+  }else{
+    msg.innerHTML='<span class="err">✗ 解锁码无效，请检查后重试（8 位数字）</span>';
+  }
+}
+
+/* ---- 结果 ---- */
+function renderResult(){
+  const r=calc(), T=TYPES[r.type];
+  const match=72+Math.round((r.pct.EI+r.pct.SN+r.pct.TF+r.pct.JP)%28/2)+Math.round(Math.abs(50-r.pct.EI)/100*12);
+  const mp=Math.min(98,match);
+  const dims=[['EI','外向 E','内向 I'],['SN','实感 S','直觉 N'],['TF','思考 T','情感 F'],['JP','计划 J','随性 P']];
+  const bars=dims.map(([d,la,lb])=>{
+    const p=r.pct[d];
+    return `<div class="dimrow">
+      <div class="dimhead"><span>${la}</span><span>${p>=50?lb:la} · ${Math.max(p,100-p)}%</span><span>${lb}</span></div>
+      <div class="dbar"><i class="l" style="width:${100-p}%"></i><i class="r" style="width:${p}%"></i></div>
+      <div class="dimtag"><span>${100-p}%</span><span>${p}%</span></div></div>`;
+  }).join('');
+
+  $('page-result').innerHTML=`
+  <div class="topbar"><span>你的测试结果</span><span><b>${r.type}</b></span></div>
+  <div class="rcard">
+    <div class="lab">你的隐藏人格</div>
+    <div class="type">${r.type}</div>
+    <div class="tname">${T.name} · ${T.group}</div>
+    <div class="anime">
+      <div style="font-size:12px;opacity:.85;letter-spacing:2px">与你灵魂最像的角色</div>
+      <div class="n">${T.anime}</div>
+      <div class="w">${T.work}</div>
+      <div class="match">匹配度 <b>${mp}%</b></div>
+      <div class="matchbar"><div class="matchfill" id="mf"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="font-size:17px">📊 你的四维画像</h2>
+    ${bars}
+  </div>
+
+  <div class="card">
+    <div class="sec" style="margin-top:0">
+      <h3>🎭 为什么是 ${T.anime}？</h3>
+      <p style="font-size:15px;color:#413c55;margin:0">${T.match}</p>
+      <div class="tags" style="margin-top:12px">${T.tags.map(t=>`<span class="tag">#${t}</span>`).join('')}</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec" style="margin-top:0">
+      <h3>✨ 你的天赋</h3><ul class="list">${T.strong.map(x=>`<li>${x}</li>`).join('')}</ul>
+    </div>
+    <div class="sec"><h3>⚠️ 你的盲点</h3><ul class="list">${T.weak.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+    <div class="sec"><h3>🌱 成长建议</h3><ul class="list">${T.grow.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+  </div>
+
+  <div class="card">
+    <div class="sec" style="margin-top:0">
+      <h3>🤝 角色关系</h3>
+      <p style="font-size:14px;margin:0">
+        最合拍：<b>${TYPES[T.best].anime}</b>（${TYPES[T.best].name}· ${TYPES[T.best].work}）<br>
+        最容易起冲突：<b>${TYPES[T.clash].anime}</b>（${TYPES[T.clash].name}· ${TYPES[T.clash].work}）
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="font-size:17px">🖼 保存你的结果卡片</h2>
+    <p class="sub">长按下方图片保存，发朋友圈/小红书炫耀一下</p>
+    <canvas id="shareCanvas" style="display:none"></canvas>
+    <img id="shareImg" class="shareprev" alt="我的动漫人格结果">
+    <div style="text-align:center;margin-top:10px">
+      <button class="btn sm ghost" onclick="saveTip()">📥 下载图片</button>
+    </div>
+    <div class="navrow" style="margin-top:14px">
+      <button class="btn ghost sm" onclick="retake()">重新测一次</button>
+    </div>
+  </div>`;
+  show('page-result');
+  setTimeout(()=>{$('mf').style.width=mp+'%'},300);
+  drawCard(r,T,mp);
+}
+function retake(){
+  if(!confirm('确定要清空答案重新测试吗？解锁状态会保留。'))return;
+  answers=new Array(QUESTIONS.length).fill(0);
+  localStorage.setItem(LS_ANS,JSON.stringify(answers));
+  cur=0;show('page-quiz');renderQ();
+}
+
+/* ---- 分享卡片（Canvas 绘制，无外部依赖） ---- */
+function wrapText(ctx,text,x,y,maxW,lh){
+  const chars=text.split('');let line='';
+  for(let i=0;i<chars.length;i++){
+    const test=line+chars[i];
+    if(ctx.measureText(test).width>maxW&&line!==''){ctx.fillText(line,x,y);line=chars[i];y+=lh;}
+    else line=test;
+  }
+  ctx.fillText(line,x,y);return y+lh;
+}
+function saveTip(){
+  const img=$('shareImg');
+  if(!img||!img.src)return;
+  const a=document.createElement('a');
+  a.href=img.src;a.download='我的动漫人格.png';document.body.appendChild(a);a.click();a.remove();
+}
+function drawCard(r,T,mp){
+  const cv=$('shareCanvas'), W=640, H=940, dpr=Math.min(window.devicePixelRatio||1,2);
+  cv.width=W*dpr;cv.height=H*dpr;cv.style.height='auto';
+  const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+
+  const g=ctx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#7c5cff');g.addColorStop(1,'#ff6ba8');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='rgba(255,255,255,.10)';ctx.beginPath();ctx.arc(W-60,-40,200,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.08)';ctx.beginPath();ctx.arc(40,H+30,180,0,Math.PI*2);ctx.fill();
+
+  ctx.fillStyle='rgba(255,255,255,.75)';ctx.font='600 22px sans-serif';ctx.textAlign='center';
+  ctx.fillText('我 的 隐 藏 人 格',W/2,70);
+
+  ctx.fillStyle='#fff';ctx.font='900 96px sans-serif';
+  ctx.fillText(r.type,W/2,180);
+  ctx.font='700 30px sans-serif';
+  ctx.fillText(T.name+' · '+T.group,W/2,226);
+
+  // 角色框
+  ctx.fillStyle='rgba(255,255,255,.18)';
+  const bx=60,by=270,bw=W-120,bh=200;
+  ctx.beginPath();ctx.roundRect?ctx.roundRect(bx,by,bw,bh,28):ctx.rect(bx,by,bw,bh);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.8)';ctx.font='600 20px sans-serif';
+  ctx.fillText('与 我 最 像 的 动 漫 角 色',W/2,by+46);
+  ctx.fillStyle='#fff';ctx.font='900 46px sans-serif';
+  ctx.fillText(T.anime,W/2,by+112);
+  ctx.font='500 22px sans-serif';ctx.fillStyle='rgba(255,255,255,.85)';
+  ctx.fillText(T.work,W/2,by+152);
+  ctx.font='700 24px sans-serif';ctx.fillStyle='#fff';
+  ctx.fillText('匹配度 '+mp+'%',W/2,by+186);
+
+  // 四维
+  const dims=[['EI','E 外向','I 内向'],['SN','S 实感','N 直觉'],['TF','T 思考','F 情感'],['JP','J 计划','P 随性']];
+  let y=530;
+  dims.forEach(([d,la,lb])=>{
+    const p=r.pct[d];
+    ctx.textAlign='left';ctx.font='700 20px sans-serif';ctx.fillStyle='rgba(255,255,255,.9)';
+    ctx.fillText(la,bx,y);
+    ctx.textAlign='right';ctx.fillText(lb,bx+bw,y);
+    y+=14;
+    ctx.fillStyle='rgba(255,255,255,.25)';
+    ctx.beginPath();ctx.roundRect?ctx.roundRect(bx,y,bw,12,6):ctx.rect(bx,y,bw,12);ctx.fill();
+    ctx.fillStyle='#fff';
+    ctx.beginPath();ctx.roundRect?ctx.roundRect(bx,y,bw*p/100,12,6):ctx.rect(bx,y,bw*p/100,12);ctx.fill();
+    y+=44;
+  });
+
+  ctx.textAlign='center';
+  ctx.fillStyle='rgba(255,255,255,.85)';ctx.font='500 21px sans-serif';
+  y=wrapText(ctx,T.tags.map(t=>'#'+t).join('  '),100,800,W-200,34);
+  ctx.font='600 22px sans-serif';ctx.fillStyle='rgba(255,255,255,.7)';
+  ctx.fillText('长按识别 · 测测你是哪个动漫角色',W/2,890);
+
+  try{ $('shareImg').src=cv.toDataURL('image/png'); }catch(e){}
+}
+
+/* ---- 卖货区渲染：根据 SELL.mode 自动切换 ---- */
+function copyContact(){
+  const txt=SELL.contact.replace(/^.*?[:：]\s*/,'').trim()||SELL.contact;
+  const done=()=>alert('已复制：'+txt+'  去微信粘贴添加吧');
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done).catch(fallbackCopy);}
+  else fallbackCopy();
+  function fallbackCopy(){
+    const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');done();}catch(e){alert('请手动复制：'+txt);}
+    ta.remove();
+  }
+}
+function initSell(){
+  $('priceBox').innerHTML=`${SELL.price}<small> 一次性</small><del>${SELL.originPrice}</del>`;
+  $('sellTip').innerHTML=(SELL.tip||'').replace(/\n/g,'<br>');
+  const b=$('buyBox');
+  const head=`<div style="font-size:14px;font-weight:700;margin-bottom:12px">还没有解锁码？</div>`;
+  if(SELL.mode==='xianyu'||SELL.mode==='link'){
+    b.innerHTML=head+
+      `<a class="btn pink" href="${SELL.buyUrl}" target="_blank" rel="noopener"
+          style="text-decoration:none;display:block;text-align:center">${SELL.buyBtnText}</a>
+       <p class="tip" style="margin-top:10px">如果按钮打不开，长按复制链接：<br>
+       <span style="color:var(--brand);word-break:break-all">${SELL.buyUrl}</span></p>`;
+  }else{
+    const qr=SELL.qrImage
+      ? `<img src="${SELL.qrImage}" style="width:180px;height:180px;border-radius:12px;display:block;margin:0 auto">`
+      : `<div style="height:180px;border:2px dashed #e6dffb;border-radius:12px;display:flex;align-items:center;
+          justify-content:center;color:#b3adc4;font-size:13px;text-align:center;padding:0 20px">
+          在这里放你的收款二维码<br>（改代码里 SELL.qrImage）</div>`;
+    b.innerHTML=head+
+      `<div style="background:#fff;border-radius:14px;padding:16px;text-align:center">${qr}
+        <div style="font-size:16px;font-weight:800;margin-top:12px">${SELL.contact}</div>
+        <div style="font-size:12px;color:var(--sub);margin-top:4px">支付 ${SELL.price} 后，把截图发给我，秒发解锁码</div>
+      </div>
+      <button class="btn ghost sm" style="margin-top:12px" onclick="copyContact()">复制联系方式</button>`;
+  }
+}
+
+/* ---- 商家后台：?admin=你的密钥 打开解锁码生成器 ---- */
+function initAdmin(){
+  const p=new URLSearchParams(location.search).get('admin');
+  if(!p)return;
+  const want=String(hashInt(SALT)%100000).padStart(5,'0');
+  if(p!==want && p!=='opensesame')return;
+  const box=$('adminbox');
+  box.classList.remove('hidden');
+  box.innerHTML=`<div class="genbox">
+    <b>🔑 解锁码生成器（只有你能看到）</b>
+    <div class="tip">生成一批码，用户下单后发一个给他。每个码只能用一次（你自己记录即可）。建议一次生成 50 个。</div>
+    <input id="genN" type="number" value="50" min="1" max="500">
+    <div style="display:flex;gap:8px">
+      <button class="btn sm" onclick="genCodes()">生成</button>
+      <button class="btn sm ghost" onclick="copyCodes()">复制全部</button>
+    </div>
+    <div class="codelist" id="codelist"></div>
+  </div>`;
+}
+function genCodes(){
+  const n=Math.min(500,Math.max(1,parseInt($('genN').value||'50',10)));
+  const start=Math.floor(Math.random()*9000)+1000;
+  let out=[];
+  for(let i=0;i<n;i++)out.push(makeCode((start+i)%10000));
+  $('codelist').innerHTML=out.join('<br>');
+}
+function copyCodes(){
+  const t=$('codelist').innerText;
+  if(!t)return;
+  navigator.clipboard?.writeText(t.replace(/\n/g,'\n'));
+  alert('已复制 '+t.split('\n').length+' 个解锁码');
+}
+
+/* ---- 链接直达解锁：?code=12345678 打开即已解锁，不用手动输入 ---- */
+function initCodeParam(){
+  const c=new URLSearchParams(location.search).get('code');
+  if(c&&checkCode(c))localStorage.setItem(LS_UNLOCK,'1');
+}
+
+initCounter();initSell();initAdmin();initCodeParam();
+if(localStorage.getItem(LS_UNLOCK)==='1'&&localStorage.getItem(LS_ANS)){
+  // 已解锁且有答案，直接进入结果（可从首页按钮再进）
+}
+</script>
+</body>
+</html>
