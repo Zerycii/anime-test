@@ -160,11 +160,7 @@ p{margin:0 0 12px}
         <span class="badge">✦ 16 种人格</span>
         <span class="badge">✦ 16 位经典角色</span>
       </div>
-      <div class="chips">
-        <span class="chip">火影忍者</span><span class="chip">进击的巨人</span><span class="chip">名侦探柯南</span>
-        <span class="chip">海贼王</span><span class="chip">BLEACH</span><span class="chip">钢之炼金术师</span>
-        <span class="chip">咒术回战</span><span class="chip">你的名字。</span>
-      </div>
+      <div class="chips" id="chipsBox"></div>
     </div>
 
     <div class="card">
@@ -175,6 +171,8 @@ p{margin:0 0 12px}
         <li>3️⃣ 解锁后查看你的<strong>专属动漫角色</strong>、匹配度、性格深度解析</li>
       </ul>
     </div>
+
+    <div id="resumeBox" class="hidden" style="margin-top:18px"></div>
 
     <div style="margin-top:18px">
       <button class="btn" onclick="startQuiz()">开始测试 →</button>
@@ -316,8 +314,15 @@ const DIM_META = {
 
 /* =========================================================
    ② 角色区：16 型对应 16 位角色，想换就改这里
+   -----------------------------------------------------------
+   THEME 决定用哪一套角色：
+     'guoman' → 国漫角色库（孙悟空、猪八戒、灰太狼、唐三…）
+     'anime'  → 日漫角色库（鸣人、路飞、柯南…）
+   两套都写好了，改这一个词就能切换，可以上架两版测哪个数据好
    ========================================================= */
-const TYPES = {
+const THEME = 'anime';         // ← 'guoman' | 'anime'（当前：日漫版）
+
+const TYPES_ANIME = {
   INTJ:{name:'建筑师', group:'分析家', anime:'鲁路修·兰佩路基', work:'《叛逆的鲁路修》',
     tags:['谋略家','孤高','长远布局','不擅表达'],
     match:'你和他一样，习惯在别人还没反应过来时就已布好整盘棋。你不爱解释，也不指望被理解，只在意结果是不是按你想要的方向走。',
@@ -432,6 +437,131 @@ const TYPES = {
     best:'ISTJ', clash:'INTJ'}
 };
 
+/* ---------- 国漫角色库 ---------- */
+const TYPES_GUOMAN = {
+  INTJ:{name:'建筑师', group:'分析家', anime:'盖聂', work:'《秦时明月》',
+    tags:['深谋远虑','孤高剑客','护短','不善言辞'],
+    match:'你和他一样，习惯在开口之前就把所有可能性推演完毕。你不解释，也懒得为自己辩白，只在关键时刻用行动说话。',
+    strong:['局势判断极准，能看到三步之后的走向','内心标准极稳，不随外界评价动摇','关键时刻的可靠程度惊人'],
+    weak:['习惯把责任往自己身上揽，活得比谁都累','表情太少，别人常常读不懂你','认定的路很难被劝回'],
+    grow:['试着把想法说出来，被理解不会削弱你的力量','允许别人替你分担一部分重量','给自己留一段什么都不想的时间'],
+    best:'ENFP', clash:'ESFP'},
+  INTP:{name:'逻辑学家', group:'分析家', anime:'王也', work:'《一人之下》',
+    tags:['懒散天才','道家思维','爱琢磨','不争'],
+    match:'你和他一样，看起来什么都不在乎，其实脑子里转得比谁都快。比起赢，你更在意"这事儿到底是怎么回事"。',
+    strong:['复杂问题的拆解能力极强','不被情绪和立场裹挟，只看本质','对感兴趣的东西能钻研到很深'],
+    weak:['想得多做得少，容易停在"我觉得"阶段','对人情世故反应钝，常被误认为冷漠','一旦觉得没意思就彻底摆烂'],
+    grow:['给自己设一个"想明白 80% 就动手"的截止线','把想法讲给别人听，用外部反馈打破闭环','每周逼自己做一件没那么有趣但有用的事'],
+    best:'ENTJ', clash:'ESFJ'},
+  ENTJ:{name:'指挥官', group:'分析家', anime:'花城', work:'《天官赐福》',
+    tags:['绝对强大','护短','掌控全局','专一'],
+    match:'你和他一样，从骨子里不接受被动。你习惯站在能掌控局面的位置，并且愿意为了认定的人倾尽所有。',
+    strong:['目标感与行动力都极强','高压下反而更清醒','敢做别人不敢做的决定'],
+    weak:['掌控欲过强，容易忽略别人的节奏','对自己狠到不留余地','表达方式有时让人觉得压迫'],
+    grow:['区分"保护"和"接管"，允许对方自己走','偶尔示弱不会让你变弱','给"什么都不做的时间"一点合法性'],
+    best:'INFP', clash:'ISFP'},
+  ENTP:{name:'辩论家', group:'分析家', anime:'灰太狼', work:'《喜羊羊与灰太狼》',
+    tags:['发明狂','屡败屡战','嘴硬心软','脑洞清奇'],
+    match:'你和他一样，点子比谁都多，翻车也翻得比谁都勤。但真正让人服气的是 —— 你从来不认输，爬起来又是一条好汉。',
+    strong:['脑洞和创意产出速度惊人','抗挫能力离谱，失败从不放在心上','临场反应快，随机应变一流'],
+    weak:['起手太多收尾太少，容易半途而废','嘴上不饶人，无意中得罪人','对重复枯燥的事完全没有耐心'],
+    grow:['每季度只挑一件事，逼自己做到收尾','分清"赢了对错"和"赢了对人"','找一个能帮你兜底的搭档'],
+    best:'INFJ', clash:'ISTJ'},
+  INFJ:{name:'提倡者', group:'外交家', anime:'谢怜', work:'《天官赐福》',
+    tags:['温柔坚韧','使命感','自我牺牲','历尽沧桑'],
+    match:'你和他一样，经历过失望之后依然选择温柔。你心里有一团火，只是不让太多人看见。',
+    strong:['对人的处境有极深的体察与悲悯','信念感极强，摔倒了也能自己站起来','在别人崩溃时异常稳得住'],
+    weak:['习惯性把所有苦往肚子里咽','容易被他人的痛苦消耗过度','一旦信念动摇，恢复期特别长'],
+    grow:['练习直接说出"我需要什么"','把照顾自己也当成一项正事','允许别人为你做点什么，这不是亏欠'],
+    best:'ENFP', clash:'ESTP'},
+  INFP:{name:'调停者', group:'外交家', anime:'椿', work:'《大鱼海棠》',
+    tags:['理想主义','执拗','内心柔软','孤注一掷'],
+    match:'你和他一样，心里有一个比现实更干净的世界。别人觉得你倔，其实你只是不愿意背叛自己相信的东西。',
+    strong:['感受力和共情力细腻到惊人','认定的事会安静地坚持到底','创造力藏在温柔的执念里'],
+    weak:['容易内耗，把外界的否定全盘吸收','为了执念容易忽略现实代价','回避冲突，问题越积越多'],
+    grow:['把"感受"写成具体的事，能解决一半内耗','做决定前先算一遍代价，这不叫妥协','找一个能把你的想法落地的人'],
+    best:'ENTJ', clash:'ESTJ'},
+  ENFJ:{name:'主人公', group:'外交家', anime:'唐三', work:'《斗罗大陆》',
+    tags:['热血担当','护短','团队核心','责任感'],
+    match:'你和他一样，嘴上不说漂亮话，但身边的人有难你第一个冲。你把"让大家变强"当成自己的事。',
+    strong:['天然能凝聚一群人','责任感极强，说过就一定做到','能看见别人的长处并真心托付'],
+    weak:['把所有人的期待扛在自己身上','控制欲藏在"我是为你好"里','过度付出后会突然疲惫抽离'],
+    grow:['每周留一段"谁都不管"的时间','分清"支持"和"接管"的区别','允许自己在不完美的时候休息'],
+    best:'INFP', clash:'ISTP'},
+  ENFP:{name:'竞选者', group:'外交家', anime:'白月初', work:'《狐妖小红娘》',
+    tags:['元气满满','嘴贫','心软','不死心'],
+    match:'你和他一样，被生活按在地上摩擦还能笑着爬起来。你身上有种不讲道理的生命力，能莫名其妙把周围人点亮。',
+    strong:['感染力和破冰能力一流','对新可能性的嗅觉很灵','逆境恢复力强得离谱'],
+    weak:['注意力分散，容易半途而废','情绪起伏大，容易冲动承诺','讨厌例行公事，细节常翻车'],
+    grow:['把大目标拆成两周能看见反馈的小块','给琐事配个清单或搭档','情绪上头时先睡一觉再回复'],
+    best:'INTJ', clash:'ISTJ'},
+  ISTJ:{name:'物流师', group:'守护者', anime:'蓝忘机', work:'《魔道祖师》',
+    tags:['守规矩','话少可靠','外冷内热','一诺千金'],
+    match:'你和他一样，说出口的话就一定算数。你不擅长表达，但你守在那里本身就是一种承诺。',
+    strong:['执行力和可靠度都到了顶','细节把控一流，几乎不犯错','压力下稳得可怕'],
+    weak:['不擅表达，常被误认为冷淡','对不守规矩的人容忍度低','抗拒变化，容易错过机会'],
+    grow:['试着解释"为什么这么做"，而不只是要求照做','主动说一句肯定，比你以为的更重','允许 20% 的事情和计划不一样'],
+    best:'ESFP', clash:'ENTP'},
+  ISFJ:{name:'守卫者', group:'守护者', anime:'小舞', work:'《斗罗大陆》',
+    tags:['温柔守护','默默付出','记性好','不善拒绝'],
+    match:'你和他一样，看起来柔软，关键时刻却比谁都硬。你守着重要的人，从不邀功，也从不退。',
+    strong:['细致体贴，能照顾到每个人的情绪','认定的关系会守很久','责任心强，答应的事一定做到'],
+    weak:['太怕给别人添麻烦，习惯委屈自己','不擅长拒绝，容易被人消耗','习惯忍耐，攒到极限才爆发'],
+    grow:['把"我不方便"练成一句能说出口的话','你的需求同样重要，不需要用付出来换','不舒服就尽早说，别等爆发'],
+    best:'ESTP', clash:'ENTP'},
+  ESTJ:{name:'总经理', group:'守护者', anime:'慢羊羊', work:'《喜羊羊与灰太狼》',
+    tags:['老村长','讲规矩','操心命','嘴碎心软'],
+    match:'你和他一样，总在操心，总在安排，看起来严厉其实比谁都怕出事。你把责任当成理所当然。',
+    strong:['组织和调度能力出色','目标清晰，推动力强','混乱中能迅速建立秩序'],
+    weak:['容易显得唠叨、不近人情','对"不合标准"缺乏耐心','把效率当成唯一标准'],
+    grow:['先肯定再纠正，效率反而更高','允许别人用不同的方式达到同样结果','关心不只体现在管，也可以是一句闲聊'],
+    best:'ISFP', clash:'INFP'},
+  ESFJ:{name:'执政官', group:'守护者', anime:'美羊羊', work:'《喜羊羊与灰太狼》',
+    tags:['热心肠','爱美','重视关系','在意评价'],
+    match:'你和他一样，看起来精致讲究，其实最在意的是身边人开不开心。你会为了维护一段关系默默做很多。',
+    strong:['天生能照顾到每个人的感受','责任感强，是团队的粘合剂','行动力强，想到就去做'],
+    weak:['过度在意别人评价，容易被情绪绑架','付出后期待回报，落空就委屈','用唠叨表达关心，反而制造摩擦'],
+    grow:['把"为你好"换成"你怎么想"','允许别人用你不认同的方式生活','每周给自己安排一件纯为自己做的事'],
+    best:'ISFP', clash:'INTP'},
+  ISTP:{name:'鉴赏家', group:'探险家', anime:'梅花十三', work:'《刺客伍六七》',
+    tags:['冷静果断','话少手快','独来独往','情绪克制'],
+    match:'你和他一样，别人还在犹豫的时候你已经出手了。你不解释，行动就是你的语言。',
+    strong:['危机中判断极准，出手极快','动手能力一流，专注力惊人','情绪稳定，不容易被带节奏'],
+    weak:['情感表达过于克制，让人读不懂','对长期承诺兴趣缺缺','习惯独来独往，容易错过支持'],
+    grow:['试着用语言说出你在乎什么，哪怕笨拙','重要的人需要听到确认，不只是看到行动','偶尔接受别人的帮助'],
+    best:'ESFJ', clash:'ENFJ'},
+  ISFP:{name:'探险家', group:'探险家', anime:'罗小黑', work:'《罗小黑战记》',
+    tags:['纯粹','凭直觉','低调','认死理'],
+    match:'你和他一样，话不多，认定的事却谁都拉不回来。你不爱讲大道理，只在乎"这个人我认不认"。',
+    strong:['真诚不做作，让人本能地信任','关键时刻爆发力惊人','感受力细腻，审美天然在线'],
+    weak:['不喜欢被规划，长期目标模糊','回避口头冲突，情绪容易积压','被要求"说明理由"时会很烦躁'],
+    grow:['给冲动装一个 24 小时缓冲期','把"我在乎"说出来，别只靠行动让人猜','小事上做点计划，能省很多麻烦'],
+    best:'ESFJ', clash:'ESTJ'},
+  ESTP:{name:'企业家', group:'探险家', anime:'孙悟空', work:'《西游记》',
+    tags:['实战派','不服就干','自由至上','临场应变'],
+    match:'你和他一样，最怕的不是输，是没得打。你学东西靠上手，判断靠直觉，对纸上谈兵毫无兴趣。',
+    strong:['临场反应和魄力都极强','抗压惊人，越乱越清醒','务实，从不纠结没用的假设'],
+    weak:['长期规划弱，容易忽略后果','说话太直，无意中伤人','容易厌倦，缺少耐心'],
+    grow:['重要决定给自己 30 分钟冷静期','把"会有什么后果"问三遍再动手','找一个能帮你收尾的伙伴'],
+    best:'ISFJ', clash:'INFJ'},
+  ESFP:{name:'表演者', group:'探险家', anime:'猪八戒', work:'《西游记》',
+    tags:['及时行乐','感染力','直率','嘴馋心软'],
+    match:'你和他一样，活得比谁都实在。你不太想三年后的事，但你让每一个"现在"都过得有滋有味。',
+    strong:['自带感染力，走到哪儿都有气氛','对人真诚，没有弯弯绕绕','适应力强，什么环境都能活'],
+    weak:['讨厌规则和长期承诺','容易冲动决定和冲动消费','面对批评时防御心很强'],
+    grow:['给未来的自己开一个只进不出的账户','重要承诺先写下来再说出口','安静独处 20 分钟，你没那么怕'],
+    best:'ISTJ', clash:'INTJ'}
+};
+
+const TYPES = THEME === 'guoman' ? TYPES_GUOMAN : TYPES_ANIME;
+
+const THEME_CHIPS = {
+  guoman:['喜羊羊与灰太狼','西游记','秦时明月','一人之下','天官赐福','魔道祖师',
+          '斗罗大陆','狐妖小红娘','大鱼海棠','刺客伍六七','罗小黑战记'],
+  anime:['火影忍者','进击的巨人','名侦探柯南','海贼王','BLEACH','钢之炼金术师',
+         '咒术回战','你的名字。']
+};
+
 /* =========================================================
    ③ 解锁码：改成你自己的密钥（改了之后旧码全部失效）
    ========================================================= */
@@ -485,12 +615,69 @@ function initCounter(){
   const n=base+Math.floor((d.getTime()/1000/3600)%900)*7;
   $('counter').textContent='已有 '+n.toLocaleString()+' 人测试';
 }
+/* ---- 答题进度：读 / 清 ---- */
+function loadSaved(){
+  try{
+    const a=JSON.parse(localStorage.getItem(LS_ANS)||'null');
+    if(Array.isArray(a)&&a.length===QUESTIONS.length)return a;
+  }catch(e){}
+  return null;
+}
+function blankAnswers(){return new Array(QUESTIONS.length).fill(0);}
+
+/* ---- 首页入口：默认永远从第 1 题开始 ---- */
 function startQuiz(){
-  const saved=localStorage.getItem(LS_ANS);
-  if(saved){try{const a=JSON.parse(saved);if(Array.isArray(a)&&a.length===QUESTIONS.length)answers=a;}catch(e){}}
-  cur=answers.findIndex(x=>x===0);
-  if(cur<0)cur=QUESTIONS.length-1;
+  answers=blankAnswers();
+  localStorage.removeItem(LS_ANS);
+  cur=0;
   show('page-quiz');renderQ();
+}
+/* 继续上次进度（只有用户主动点才会走这里） */
+function resumeQuiz(){
+  const s=loadSaved();
+  answers=s||blankAnswers();
+  const n=answers.findIndex(x=>x===0);
+  cur=(n<0)?0:n;
+  show('page-quiz');renderQ();
+}
+/* 清空重来 */
+function restartQuiz(){
+  resetProgress();
+  startQuiz();
+}
+function resetProgress(){
+  localStorage.removeItem(LS_ANS);
+  answers=blankAnswers();
+  cur=0;
+  initHome();
+}
+/* 直接看上次的结果（首页出现"查看上次结果"时用） */
+function viewLast(){
+  const s=loadSaved();
+  if(!s){startQuiz();return;}
+  answers=s;
+  finish();
+}
+
+/* ---- 首页提示条：有旧进度时才出现，否则完全不打扰 ---- */
+function initHome(){
+  const box=$('resumeBox');if(!box)return;
+  const s=loadSaved();
+  if(!s){box.classList.add('hidden');box.innerHTML='';return;}
+  const answered=s.filter(x=>x>0).length;
+  const done=answered===QUESTIONS.length;
+  box.classList.remove('hidden');
+  const wrap=(title,tip,btns)=>`<div style="background:#fffbef;border:1px solid #ffe4b3;border-radius:14px;padding:16px">
+      <div style="font-size:14px;font-weight:700">${title}</div>
+      <div class="tip" style="margin:6px 0 12px">${tip}</div>
+      <div style="display:flex;gap:8px">${btns}</div></div>`;
+  box.innerHTML = done
+    ? wrap('你上次已经答完了 40 道题','可以直接看结果，也可以重新测一次',
+        `<button class="btn sm" style="flex:1" onclick="viewLast()">查看上次结果</button>
+         <button class="btn ghost sm" style="flex:1" onclick="restartQuiz()">重新测一次</button>`)
+    : wrap(`上次答到第 ${answered} 题`,'继续答题，或者从第 1 题重新开始',
+        `<button class="btn sm" style="flex:1" onclick="resumeQuiz()">继续答题</button>
+         <button class="btn ghost sm" style="flex:1" onclick="restartQuiz()">重新开始</button>`);
 }
 
 /* ---- 答题 ---- */
@@ -626,8 +813,8 @@ function renderResult(){
 }
 function retake(){
   if(!confirm('确定要清空答案重新测试吗？解锁状态会保留。'))return;
-  answers=new Array(QUESTIONS.length).fill(0);
-  localStorage.setItem(LS_ANS,JSON.stringify(answers));
+  answers=blankAnswers();
+  localStorage.removeItem(LS_ANS);
   cur=0;show('page-quiz');renderQ();
 }
 
@@ -717,6 +904,12 @@ function copyContact(){
     ta.remove();
   }
 }
+function initTheme(){
+  const box=$('chipsBox');
+  if(!box)return;
+  const list=THEME_CHIPS[THEME]||THEME_CHIPS.guoman;
+  box.innerHTML=list.map(t=>`<span class="chip">${t}</span>`).join('');
+}
 function initSell(){
   if(SELL.shopName&&$('shopName'))$('shopName').textContent=SELL.shopName;
   $('priceBox').innerHTML=`${SELL.price}<small> 一次性</small><del>${SELL.originPrice}</del>`;
@@ -795,7 +988,7 @@ function initCodeParam(){
   if(c&&checkCode(c))localStorage.setItem(LS_UNLOCK,'1');
 }
 
-initCounter();initSell();initAdmin();initCodeParam();
+initCounter();initTheme();initSell();initAdmin();initCodeParam();initHome();
 if(localStorage.getItem(LS_UNLOCK)==='1'&&localStorage.getItem(LS_ANS)){
   // 已解锁且有答案，直接进入结果（可从首页按钮再进）
 }
